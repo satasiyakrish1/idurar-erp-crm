@@ -30,6 +30,62 @@ export const login =
       }
     };
 
+export const googleLogin =
+  ({ idToken }) =>
+    async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+      });
+      const data = await authService.googleLogin({ idToken });
+
+      if (data.success === true) {
+        const auth_state = {
+          current: data.result,
+          isLoggedIn: true,
+          isLoading: false,
+          isSuccess: true,
+        };
+        window.localStorage.setItem('auth', JSON.stringify(auth_state));
+        window.localStorage.removeItem('isLogout');
+        dispatch({
+          type: actionTypes.LOGIN_SUCCESS,
+          payload: data.result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+        });
+      }
+    };
+
+export const githubLogin =
+  ({ code }) =>
+    async (dispatch) => {
+      dispatch({
+        type: actionTypes.REQUEST_LOADING,
+      });
+      const data = await authService.githubLogin({ code });
+
+      if (data.success === true) {
+        const auth_state = {
+          current: data.result,
+          isLoggedIn: true,
+          isLoading: false,
+          isSuccess: true,
+        };
+        window.localStorage.setItem('auth', JSON.stringify(auth_state));
+        window.localStorage.removeItem('isLogout');
+        dispatch({
+          type: actionTypes.LOGIN_SUCCESS,
+          payload: data.result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+        });
+      }
+    };
+
 export const register =
   ({ registerData }) =>
     async (dispatch) => {
